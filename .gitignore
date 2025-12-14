@@ -21,3 +21,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 composer.lock
+.DS_Store
+**/.DS_Store
+
+
+

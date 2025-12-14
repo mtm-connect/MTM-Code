@@ -39,11 +39,10 @@
 
     $statusKey = strtolower(str_replace(' ', '_', trim($orders->status)));
     $statusMap = [
-        'draft'            => ['Draft', 'bg-gray-300 text-gray-900'],
-        'paid'             => ['Paid', 'bg-green-300 text-green-900'],
-        'in_construction'  => ['In Construction', 'bg-purple-300 text-purple-900'],
-        'quality_control'  => ['Quality Control', 'bg-yellow-300 text-yellow-900'],
-        'dispatched'       => ['Dispatched', 'bg-blue-300 text-blue-900'],
+    'draft'            => ['Draft', 'bg-gray-300 text-gray-900'],
+                    'paid'             => ['Paid', 'bg-green-300 text-green-900'],
+                    'in_construction'  => ['In Construction', 'bg-yellow-300 text-yellow-900'],
+                    'dispatched'       => ['Dispatched', 'bg-blue-300 text-blue-900'],
     ];
     [$statusLabel, $statusClasses] = $statusMap[$statusKey]
         ?? [ucwords(str_replace('_',' ', $statusKey)), 'bg-slate-200 text-slate-900'];

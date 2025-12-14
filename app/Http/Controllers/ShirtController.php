@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Orders;
 use App\Models\Measurements;
-use App\Models\Shirt;              // ✅ fixed
-use App\Models\OrderOverview;      // ✅ fixed
+use App\Models\Shirt;
+use App\Models\OrderOverview;
 use App\Models\Price;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,23 +13,16 @@ use Illuminate\Support\Facades\Auth;
 
 class ShirtController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         $user = Auth::user();
         $id   = request()->route('id');
 
-        // Retrieve the order by ID for the authenticated user
         $orders       = Orders::where('user_id', $user->id)->findOrFail($id);
         $orderId      = $orders->id;
         $measurements = Measurements::where('order_id', $orderId)->get();
@@ -37,20 +30,17 @@ class ShirtController extends Controller
         return view('shirt.shirt_form', compact('orders', 'measurements'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $user  = Auth::user();
         $id    = request()->route('id');
         $price = Price::find(4);
 
-        $created_shirt = Shirt::create([     // ✅ fixed
+        $created_shirt = Shirt::create([
             'order_id'            => $id,
             'user_id'             => $user->id,
             'measurement_id'      => $request->measurement_id,
-            'price_id'            => '4',
+            'price_id'            => 4,
             'collar'              => $request->collar,
             'collar_buttons'      => $request->collar_buttons,
             'collar_button_down'  => $request->collar_button_down,
@@ -66,11 +56,11 @@ class ShirtController extends Controller
             'shirt_contrast_code' => $request->shirt_contrast_code,
         ]);
 
-        OrderOverview::create([             // ✅ fixed
+        OrderOverview::create([
             'order_id'        => $id,
             'user_id'         => $user->id,
             'measurement_id'  => $request->measurement_id,
-            'price_id'        => '4',
+            'price_id'        => 4,
             'two_pieces_id'   => null,
             'three_pieces_id' => null,
             'jackets_id'      => null,
@@ -82,32 +72,29 @@ class ShirtController extends Controller
             'price'           => $price?->price ?? 0,
             'status'          => 'draft',
         ]);
-        
-        return redirect(route('orders.show', ['orders' => $id]));
+
+        // ⭐ ROLE-BASED REDIRECT
+        $routeName = in_array($user->role, ['admin', 'super'])
+            ? 'admin.orders.show'
+            : 'orders.show';
+
+        return redirect()
+            ->route($routeName, ['orders' => $id])
+            ->with('success', 'Shirt created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Orders $orders)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Orders $orders)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Shirt $shirt) // ✅ type-hint uses Shirt
+    public function update(Request $request, Shirt $shirt)
     {
-        // Validate request data
         $validated = $request->validate([
             'measurement_id'      => 'required|integer',
             'collar'              => 'nullable|string',
@@ -125,19 +112,23 @@ class ShirtController extends Controller
             'shirt_contrast_code' => 'nullable|string',
         ]);
 
-        // Update the shirt record
         $shirt->update(array_merge($validated, [
             'price_id' => 4,
         ]));
 
+        $user    = Auth::user();
+        $orderId = $shirt->order_id;
+
+        // ⭐ ROLE-BASED REDIRECT
+        $routeName = in_array($user->role, ['admin', 'super'])
+            ? 'admin.orders.show'
+            : 'orders.show';
+
         return redirect()
-            ->route('orders.show', ['orders' => $shirt->order_id])
+            ->route($routeName, ['orders' => $orderId])
             ->with('success', 'Shirt updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Orders $orders)
     {
         //

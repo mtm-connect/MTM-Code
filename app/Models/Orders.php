@@ -41,29 +41,52 @@ class Orders extends Model
 
     /**
      * Generate a unique 6-character alphanumeric order number.
-     * e.g.  A7B2C9 or MTM-A7B2C9 if you want a prefix.
+     * e.g. A7B2C9
      */
     protected static function generateUniqueOrderNumber()
     {
         do {
-                              // brand or system prefix
-            $letters = strtoupper(Str::random(3));         // e.g. "ABX"
-            $digits  = rand(100, 999);                     // e.g. "582"
-            $number  =  $letters . $digits;   
+            $letters = strtoupper(Str::random(3)); // e.g. "ABX"
+            $digits  = rand(100, 999);             // e.g. "582"
+            $number  = $letters . $digits;
         } while (self::where('order_number', $number)->exists());
-    
+
         return $number;
     }
-    
 
     // 🔹 Relationships
+
+    /**
+     * All measurement records for this order
+     * (measurements table has order_id column)
+     */
     public function measurements()
     {
-        return $this->hasMany(Measurements::class);
+        return $this->hasMany(Measurements::class, 'order_id');
     }
 
+    /**
+     * All item overviews for this order
+     * (order_overviews table has order_id column)
+     */
+    public function overviews()
+    {
+        return $this->hasMany(OrderOverview::class, 'order_id');
+    }
+
+    /**
+     * (Optional) Keep the old name if something still uses it
+     */
+    public function orderOverviews()
+    {
+        return $this->hasMany(OrderOverview::class, 'order_id');
+    }
+
+    /**
+     * The user who owns this order
+     */
     public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    {
+        return $this->belongsTo(User::class);
+    }
 }

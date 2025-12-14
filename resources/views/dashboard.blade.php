@@ -85,7 +85,7 @@
 
                 <!-- ===== Card 3: Total Spent (Last 30 Days) ===== -->
                 <div class="bg-emerald-950 rounded-xl border shadow-sm p-12 flex flex-col items-center text-center">
-                    <h2 class="text-xl font-semibold text-white mt-12 mb-6">
+                    <h2 class="text-xl font-semibold text-white mt-12">
                         Total Spent (Last 30 Days)
                     </h2>
 
@@ -171,7 +171,7 @@
     </div>
 
 <!-- ===== Card 5: Documentation / How to Measure ===== -->
-<div class="relative rounded-xl overflow-hidden border border-gray-200 shadow-sm min-h-[260px]">
+<div class="relative rounded-xl overflow-hidden 0 shadow-sm min-h-[260px]">
     <!-- Background image (force behind everything) -->
     <div class="absolute inset-0 -z-10">
         <img

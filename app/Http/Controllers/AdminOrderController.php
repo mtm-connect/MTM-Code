@@ -33,6 +33,10 @@ class AdminOrderController extends Controller
         $status = $request->input('status');
         $sort   = $request->input('sort', 'desc'); // 'desc' or 'asc'
     
+        // Collection for stats (all orders, unfiltered)
+        $allOrders = Orders::all();
+    
+        // Filtered orders for table
         $orders = Orders::query()
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
@@ -49,8 +53,9 @@ class AdminOrderController extends Controller
             ->orderBy('created_at', $sort)
             ->get();
     
-        return view('admin.admin_orders', compact('orders', 'search', 'status', 'sort'));
+        return view('admin.admin_orders', compact('orders', 'search', 'status', 'sort', 'allOrders'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -203,5 +208,163 @@ class AdminOrderController extends Controller
     {
         //
     }
+
+    public function editItem(Orders $orders, OrderOverview $orderoverview, Measurements $measurement)
+{
+    $orderId        = $orders->id;
+    $orderOverviews = OrderOverview::where('id', $orderoverview->id)->first();
+    if (!$orderOverviews) return back()->with('error', 'Order overview not found.');
+
+    $measurements        = Measurements::where('order_id', $orderId)->get();
+    $selectedmeasurement = Measurements::where('id', $measurement->id)->first();
+
+    $orderType = strtolower(trim((string) $orderOverviews->type));
+
+    $selectedjacket      = null;
+    $selected_twopiece   = null;
+    $selected_threepiece = null;
+    $selectedshirt       = null;
+    $selected_waistcoat  = null;
+
+    switch ($orderType) {
+        case 'jacket':
+            if ($orderoverview->jackets_id) {
+                $selectedjacket = Jacket::where('id', $orderoverview->jackets_id)
+                                        ->where('order_id', $orderId)->first();
+            }
+            if (!$selectedjacket) return back()->with('error', 'Jacket not found for this order.');
+            return view('admin.jacket_edit', compact(
+                'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selectedjacket'
+            ));
+
+        case 'shirt':
+            $shirtId = $orderoverview->shirt_id ?? $orderoverview->shirts_id ?? null;
+            if ($shirtId) {
+                $selectedshirt = Shirt::where('id', $shirtId)
+                                      ->where('order_id', $orderId)->first();
+            }
+            if (!$selectedshirt) return back()->with('error', 'Shirt not found for this order.');
+            return view('admin.shirt_edit', compact(
+                'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selectedshirt'
+            ));
+
+        case '2 piece':
+        case 'two piece':
+        case '2piece':
+            if ($orderoverview->two_pieces_id) {
+                $selected_twopiece = TwoPiece::where('id', $orderoverview->two_pieces_id)
+                                             ->where('order_id', $orderId)->first();
+            }
+            if (!$selected_twopiece) return back()->with('error', 'Two-piece not found for this order.');
+            return view('admin.twopiece_edit', compact(
+                'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selected_twopiece'
+            ));
+
+        case '3 piece':
+        case 'three piece':
+        case '3piece':
+            if ($orderoverview->three_pieces_id) {
+                $selected_threepiece = ThreePiece::where('id', $orderoverview->three_pieces_id)
+                                                 ->where('order_id', $orderId)->first();
+            }
+            if (!$selected_threepiece) return back()->with('error', 'Three-piece not found for this order.');
+            return view('admin.threepiece_edit', compact(
+                'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selected_threepiece'
+            ));
+
+        case 'waistcoat':
+            if ($orderoverview->waistcoat_id) {
+                $selected_waistcoat = Waistcoat::where('id', $orderoverview->waistcoat_id)
+                                               ->where('order_id', $orderId)->first();
+            }
+            if (!$selected_waistcoat) return back()->with('error', 'Waistcoat not found for this order.');
+            return view('admin.waistcoat_edit', compact(
+                'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selected_waistcoat'
+            ));
+
+        default:
+            return back()->with('error', 'Unsupported or missing order type.');
+    }
+}
+
+public function viewItem(Orders $orders, OrderOverview $orderoverview, Measurements $measurement)
+{
+    $orderId        = $orders->id;
+    $orderOverviews = OrderOverview::where('id', $orderoverview->id)->first();
+    if (!$orderOverviews) return back()->with('error', 'Order overview not found.');
+
+    $measurements        = Measurements::where('order_id', $orderId)->get();
+    $selectedmeasurement = Measurements::where('id', $measurement->id)->first();
+    $measurement         = $selectedmeasurement; // for blade compatibility
+
+    $orderType = strtolower(trim((string) $orderOverviews->type));
+
+    $selectedjacket      = null;
+    $selected_twopiece   = null;
+    $selected_threepiece = null;
+    $selectedshirt       = null;
+    $selected_waistcoat  = null;
+
+    switch ($orderType) {
+        case 'jacket':
+            if ($orderoverview->jackets_id) {
+                $selectedjacket = Jacket::where('id', $orderoverview->jackets_id)
+                                        ->where('order_id', $orderId)->first();
+            }
+            if (!$selectedjacket) return back()->with('error', 'Jacket not found for this order.');
+            return view('admin.jacket_view', compact(
+                'orders', 'orderOverviews', 'measurement', 'selectedmeasurement', 'selectedjacket'
+            ));
+
+        case 'shirt':
+            $shirtId = $orderoverview->shirt_id ?? $orderoverview->shirts_id ?? null;
+            if ($shirtId) {
+                $selectedshirt = Shirt::where('id', $shirtId)
+                                      ->where('order_id', $orderId)->first();
+            }
+            if (!$selectedshirt) return back()->with('error', 'Shirt not found for this order.');
+            return view('admin.shirt_view', compact(
+                'orders', 'orderOverviews', 'measurement', 'selectedmeasurement', 'selectedshirt'
+            ));
+
+        case '2 piece':
+        case 'two piece':
+        case '2piece':
+            if ($orderoverview->two_pieces_id) {
+                $selected_twopiece = TwoPiece::where('id', $orderoverview->two_pieces_id)
+                                             ->where('order_id', $orderId)->first();
+            }
+            if (!$selected_twopiece) return back()->with('error', 'Two-piece not found for this order.');
+            return view('admin.twopiece_view', compact(
+                'orders', 'orderOverviews', 'measurement', 'selectedmeasurement', 'selected_twopiece'
+            ));
+
+        case '3 piece':
+        case 'three piece':
+        case '3piece':
+            if ($orderoverview->three_pieces_id) {
+                $selected_threepiece = ThreePiece::where('id', $orderoverview->three_pieces_id)
+                                                 ->where('order_id', $orderId)->first();
+            }
+            if (!$selected_threepiece) return back()->with('error', 'Three-piece not found for this order.');
+            return view('admin.threepiece_view', compact(
+                'orders', 'orderOverviews', 'measurement', 'selectedmeasurement', 'selected_threepiece'
+            ));
+
+        case 'waistcoat':
+            if ($orderoverview->waistcoat_id) {
+                $selected_waistcoat = Waistcoat::where('id', $orderoverview->waistcoat_id)
+                                               ->where('order_id', $orderId)->first();
+            }
+            if (!$selected_waistcoat) return back()->with('error', 'Waistcoat not found for this order.');
+            return view('admin.waistcoat_view', compact(
+                'orders', 'orderOverviews', 'measurement', 'selectedmeasurement', 'selected_waistcoat'
+            ));
+
+        default:
+            return back()->with('error', 'Unsupported or missing order type.');
+    }
+}
+
 }
 

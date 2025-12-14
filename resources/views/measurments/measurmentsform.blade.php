@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <x-guest-layout>
+
 
 <!-- SPACING / MARGINS -->
 <div class=" mt-11 mx-96">
@@ -742,5 +742,5 @@
     </form>
 
     </div>
-</x-guest-layout>
+
 </x-app-layout>

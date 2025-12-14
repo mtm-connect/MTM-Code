@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Orders;
 use App\Models\Measurements;
-use App\Models\ThreePiece;        // ✅ fixed
-use App\Models\OrderOverview;     // ✅ fixed
+use App\Models\ThreePiece;
+use App\Models\OrderOverview;
 use App\Models\Price;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,23 +13,16 @@ use Illuminate\Support\Facades\Auth;
 
 class ThreeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         $user = Auth::user();
         $id   = request()->route('id');
 
-        // Retrieve the order by ID for the authenticated user
         $orders       = Orders::where('user_id', $user->id)->findOrFail($id);
         $orderId      = $orders->id;
         $measurements = Measurements::where('order_id', $orderId)->get();
@@ -37,20 +30,17 @@ class ThreeController extends Controller
         return view('three.three_form', compact('orders','measurements'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $user  = Auth::user(); 
         $id    = request()->route('id');
         $price = Price::find(2);
 
-        $created_three_piece = ThreePiece::create([   // ✅ fixed
+        $created_three_piece = ThreePiece::create([
             'order_id'                                  => $id,
             'user_id'                                   => $user->id,
             'measurement_id'                            => $request->measurement_id,
-            'price_id'                                  => '2',
+            'price_id'                                  => 2,
             'jacket_type'                               => $request->jacket_type,
             'jacket_construction'                       => $request->jacket_construction,
             'jacket_lapel_type'                         => $request->jacket_lapel_type,
@@ -95,11 +85,11 @@ class ThreeController extends Controller
             'code_pants_button'                         => $request->code_pants_button,
         ]);
 
-        OrderOverview::create([           // ✅ fixed
+        OrderOverview::create([
             'order_id'        => $id,
             'user_id'         => $user->id,
             'measurement_id'  => $request->measurement_id,
-            'price_id'        => '2',
+            'price_id'        => 2,
             'two_pieces_id'   => null,
             'three_pieces_id' => $created_three_piece->id,
             'jackets_id'      => null,
@@ -112,31 +102,28 @@ class ThreeController extends Controller
             'status'          => 'draft',
         ]);
         
-        return redirect(route('orders.show', ['orders' => $id]));
+        // ⭐ ROLE-BASED REDIRECT
+        $routeName = in_array($user->role, ['admin', 'super'])
+            ? 'admin.orders.show'
+            : 'orders.show';
+
+        return redirect()
+            ->route($routeName, ['orders' => $id])
+            ->with('success', '3 Piece created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Orders $orders)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Orders $orders)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ThreePiece $three) // ✅ fixed type-hint
+    public function update(Request $request, ThreePiece $three)
     {
-        // Validate request data
         $validated = $request->validate([
             'measurement_id' => 'required|integer',
 
@@ -190,14 +177,19 @@ class ThreeController extends Controller
             'price_id' => 2, 
         ]));
 
+        $user    = Auth::user();
+        $orderId = $three->order_id;
+
+        // ⭐ ROLE-BASED REDIRECT
+        $routeName = in_array($user->role, ['admin', 'super'])
+            ? 'admin.orders.show'
+            : 'orders.show';
+
         return redirect()
-            ->route('orders.show', ['orders' => $three->order_id])
+            ->route($routeName, ['orders' => $orderId])
             ->with('success', '3 Piece updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Orders $orders)
     {
         //

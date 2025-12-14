@@ -8,21 +8,15 @@ use App\Models\ThreePiece;
 use App\Models\Jacket;
 use App\Models\Orders;
 use App\Models\Measurements;
-use App\Models\OrderOverview; // renamed model
+use App\Models\OrderOverview;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use App\Jobs\GenerateAndEmailOrderZip;
 
 class OrdersActionController extends Controller
 {
     public function send(Request $request, Orders $order)
     {
-        $this->authorize('update', $order); // optional if using policies
+        // We already have admin middleware on the route, so no extra authorize() needed
 
         // Validate prerequisites: at least one item and one measurement
         $order->load(['orderOverviews', 'measurements']);
@@ -30,11 +24,16 @@ class OrdersActionController extends Controller
             return back()->with('Unsuccessful', 'You need at least one item and one measurement to send.');
         }
 
-        // 1 & 2) Mark status -> in construction
+        // Set order + items to in construction (optional but recommended)
+        foreach ($order->orderOverviews as $item) {
+            $item->status = 'in construction';
+            $item->save();
+        }
+
         $order->status = 'in construction';
         $order->save();
 
-        // 3 & 4) Queue job to generate PDFs, zip, and email factory
+        // Queue job to generate PDFs, zip, and email factory
         GenerateAndEmailOrderZip::dispatch($order->id);
 
         return back()->with('success', 'Order sent to factory. PDFs will be generated and emailed shortly.');
@@ -42,19 +41,37 @@ class OrdersActionController extends Controller
 
     public function markAsDispatched(Request $request, Orders $order)
     {
-        $this->authorize('update', $order);
+        // No $this->authorize() – route is already protected by can:access-admin
+
+        // Optional: only allow if it's currently "in construction"
+        if (strtolower(trim($order->status)) !== 'in construction') {
+            return back()->with('Unsuccessful', 'Only orders that are In Construction can be marked as dispatched.');
+        }
+
+        // Load items
+        $order->load('orderOverviews');
+
+        // Update each item status
+        foreach ($order->orderOverviews as $item) {
+            $item->status = 'dispatched';
+            $item->save();
+        }
+
+        // Update the main order
         $order->status = 'dispatched';
         $order->save();
 
-        return back()->with('success', 'Order marked as dispatched.');
+        return back()->with('success', 'Order and items marked as dispatched.');
     }
 
     public function destroy(Request $request, Orders $order)
     {
-        $this->authorize('delete', $order);
+        // No $this->authorize() – admin middleware is already in place
+
         $order->delete();
 
-        return redirect()->route('orders.index')->with('success', 'Order deleted.');
+        return redirect()
+            ->route('admin.orders.index')   // note: admin prefix
+            ->with('success', 'Order deleted.');
     }
 }
-

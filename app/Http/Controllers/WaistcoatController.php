@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Orders;
 use App\Models\Measurements;
 use App\Models\Waistcoat;
-use App\Models\OrderOverview;   // ✅ renamed model
+use App\Models\OrderOverview;
 use App\Models\Price;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -34,7 +34,7 @@ class WaistcoatController extends Controller
         $orderId      = $orders->id;
         $measurements = Measurements::where('order_id', $orderId)->get();
 
-        return view('waistcoat.waistcoat_form', compact('orders','measurements'));
+        return view('waistcoat.waistcoat_form', compact('orders', 'measurements'));
     }
 
     /**
@@ -47,20 +47,20 @@ class WaistcoatController extends Controller
         $price = Price::find(6);
 
         $created_waistcoat = Waistcoat::create([
-            'order_id'              => $id,
-            'user_id'               => $user->id,
-            'measurement_id'        => $request->measurement_id,
-            'price_id'              => '6',
-            'waistcoat_type'        => $request->waistcoat_type,
-            'code_waistcoat'        => $request->code_waistcoat,
-            'code_waistcoat_buttons'=> $request->code_waistcoat_buttons,
+            'order_id'               => $id,
+            'user_id'                => $user->id,
+            'measurement_id'         => $request->measurement_id,
+            'price_id'               => 6,
+            'waistcoat_type'         => $request->waistcoat_type,
+            'code_waistcoat'         => $request->code_waistcoat,
+            'code_waistcoat_buttons' => $request->code_waistcoat_buttons,
         ]);
 
         OrderOverview::create([
             'order_id'        => $id,
             'user_id'         => $user->id,
             'measurement_id'  => $request->measurement_id,
-            'price_id'        => '6',
+            'price_id'        => 6,
             'two_pieces_id'   => null,
             'three_pieces_id' => null,
             'jackets_id'      => null,
@@ -72,8 +72,15 @@ class WaistcoatController extends Controller
             'price'           => $price?->price ?? 0,
             'status'          => 'draft',
         ]);
+
+        // ⭐ Role-based redirect
+        $routeName = in_array($user->role, ['admin', 'super'])
+            ? 'admin.orders.show'
+            : 'orders.show';
         
-        return redirect()->route('orders.show', ['orders' => $id]);
+        return redirect()
+            ->route($routeName, ['orders' => $id])
+            ->with('success', 'Waistcoat created successfully.');
     }
 
     /**
@@ -98,18 +105,26 @@ class WaistcoatController extends Controller
     public function update(Request $request, Waistcoat $waistcoat)
     {
         $validated = $request->validate([
-            'measurement_id'        => 'required|integer',
-            'waistcoat_type'        => 'nullable|string',
-            'code_waistcoat'        => 'nullable|string',
-            'code_waistcoat_buttons'=> 'nullable|string',
+            'measurement_id'         => 'required|integer',
+            'waistcoat_type'         => 'nullable|string',
+            'code_waistcoat'         => 'nullable|string',
+            'code_waistcoat_buttons' => 'nullable|string',
         ]);
 
         $waistcoat->update(array_merge($validated, [
             'price_id' => 6,
         ]));
 
+        $user    = Auth::user();
+        $orderId = $waistcoat->order_id;
+
+        // ⭐ Role-based redirect
+        $routeName = in_array($user->role, ['admin', 'super'])
+            ? 'admin.orders.show'
+            : 'orders.show';
+
         return redirect()
-            ->route('orders.show', ['orders' => $waistcoat->order_id])
+            ->route($routeName, ['orders' => $orderId])
             ->with('success', 'Waistcoat updated successfully.');
     }
 

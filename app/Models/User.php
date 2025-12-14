@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Orders;
+
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'company',
@@ -26,24 +23,14 @@ class User extends Authenticatable
         'address_line_2',
         'post_code',
         'county',
-        'subscription', // ✅ added
+        'subscription',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -52,15 +39,20 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Boot method to set default values on model creation.
-     */
     protected static function booted(): void
     {
         static::creating(function ($user) {
             if (empty($user->subscription)) {
-                $user->subscription = 'None'; // ✅ default value
+                $user->subscription = 'None';
             }
         });
+    }
+
+    /**
+     * Relationship: A user has many orders.
+     */
+    public function orders()
+    {
+        return $this->hasMany(Orders::class, 'user_id');
     }
 }

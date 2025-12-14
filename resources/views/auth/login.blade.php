@@ -74,6 +74,15 @@
                     </x-primary-button-dark>
                 </div>
             </form>
+            <div class="mt-4 text-center">
+        <p class="text-sm text-white">
+            Don’t have an account?
+            <a href="{{ route('register') }}"
+               class="underline text-white hover:text-gray-300">
+                Register here
+            </a>
+        </p>
+    </div>
         </div>
     </div>
 </div>

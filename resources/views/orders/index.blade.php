@@ -127,8 +127,8 @@
         <span class="px-3 py-1 text-sm font-semibold rounded-full transition duration-200 ease-in-out 
             {{ $order->status === 'draft' ? 'bg-gray-300 text-gray-950' : 
                ($order->status === 'paid' ? 'bg-green-300 text-green-950' : 
-               ($order->status === 'In Construction' ? 'bg-purple-300 text-purple-950' : 
-               ($order->status === 'Fulfilled' ? 'bg-yellow-300 text-yellow-700' : 'text-gray-950 border border-gray-300'))) }}
+               ($order->status === 'in construction' ? 'bg-yellow-300 text-yellow-950' : 
+               ($order->status === 'dispatched' ? 'bg-blue-300 text-blue-950' : 'text-gray-950 border border-gray-300'))) }}
             !text-gray-950 !bg-opacity-100">
             {{ $order->status }}
         </span>

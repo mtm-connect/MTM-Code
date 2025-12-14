@@ -117,7 +117,6 @@ class JacketController extends Controller
      */
     public function update(Request $request, Jacket $jacket)
     {
-        // Validate request data
         $validated = $request->validate([
             'measurement_id'                              => 'required|integer',
             'jacket_type'                                 => 'nullable|string',
@@ -144,16 +143,24 @@ class JacketController extends Controller
             'code_satin_lapel'                            => 'nullable|string',
             'code_colour_on_last_button_hole'             => 'nullable|string',
         ]);
-
-        // Update the jacket record
+    
         $jacket->update(array_merge($validated, [
-            'price_id' => 3, // keep synced with your Price row
+            'price_id' => 3,
         ]));
-
+    
+        $user      = Auth::user();
+        $orderId   = $jacket->order_id;
+    
+        // 👇 choose route based on role
+        $routeName = in_array($user->role, ['admin', 'super'])
+            ? 'admin.orders.show'
+            : 'orders.show';
+    
         return redirect()
-            ->route('orders.show', ['orders' => $jacket->order_id])
+            ->route($routeName, ['orders' => $orderId])
             ->with('success', 'Jacket updated successfully.');
     }
+    
 
     /**
      * Remove the specified resource from storage.

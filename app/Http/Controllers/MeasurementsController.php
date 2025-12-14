@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Auth;
 class MeasurementsController extends Controller
 {
     /**
+     * Quick helper to know if current user is an admin.
+     */
+    protected function isAdminUser(): bool
+    {
+        return Auth::check() && in_array(Auth::user()->role, ['admin', 'super']);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -26,8 +34,12 @@ class MeasurementsController extends Controller
         $user = Auth::user();
         $id   = request()->route('id');
 
-        // Ensure the order belongs to the authenticated user
-        $orders = Orders::where('user_id', $user->id)->findOrFail($id);
+        // If admin -> can access any order, else only their own
+        if ($this->isAdminUser()) {
+            $orders = Orders::findOrFail($id);
+        } else {
+            $orders = Orders::where('user_id', $user->id)->findOrFail($id);
+        }
 
         return view('measurments.measurmentsform', compact('orders'));
     }
@@ -40,7 +52,6 @@ class MeasurementsController extends Controller
         $user = Auth::user();
         $id   = request()->route('id');
 
-        // (Optional) quick validation for key fields
         $request->validate([
             'name'   => 'required|string|max:255',
             'dob'    => 'required|date',
@@ -81,11 +92,22 @@ class MeasurementsController extends Controller
             'special_requirements' => $request->special_requirements,
         ]);
         
-        return redirect()->route('orders.show', ['orders' => $id]);
+        // After create, both admin and user go back to the corresponding order page
+        if ($this->isAdminUser()) {
+            return redirect()
+                ->route('admin.orders.show', ['orders' => $id])
+                ->with('success', 'Measurements created successfully.');
+        }
+
+        return redirect()
+            ->route('orders.show', ['orders' => $id])
+            ->with('success', 'Measurements created successfully.');
     }
 
     /**
-     * Display the specified resource (read-only view if order not draft).
+     * Display the specified resource.
+     * For users: read-only if not draft.
+     * For admins: always editable (admin view).
      */
     public function show(Measurements $measurement, Orders $orders)
     {
@@ -94,46 +116,86 @@ class MeasurementsController extends Controller
         }
 
         $selectedmeasurement = $measurement;
+
+        // Admin: always editable, admin view
+        if ($this->isAdminUser()) {
+            $readonly = false;
+
+            return view('admin.measurmentsupdate', compact(
+                'orders',
+                'selectedmeasurement',
+                'readonly'
+            ));
+        }
+
+        // User: read-only if order not draft
         $readonly = $orders->status !== 'draft';
 
-        return view('measurments.measurmentsupdate', compact('orders', 'selectedmeasurement', 'readonly'));
+        return view('measurments.measurmentsupdate', compact(
+            'orders',
+            'selectedmeasurement',
+            'readonly'
+        ));
     }
     
     /**
-     * Edit page (redirects to read-only if order not draft).
+     * Edit page.
+     * Users: only when draft, otherwise redirect to read-only show.
+     * Admins: always editable, admin view.
      */
     public function edit(Orders $orders, Measurements $measurement)
     {
         if ($measurement->order_id !== $orders->id) {
             abort(404);
         }
-    
+
+        $selectedmeasurement = $measurement;
+
+        // Admin: straight to admin edit view
+        if ($this->isAdminUser()) {
+            $readonly = false;
+
+            return view('admin.measurmentsupdate', compact(
+                'orders',
+                'selectedmeasurement',
+                'readonly'
+            ));
+        }
+
+        // User: if not draft, bounce to read-only
         if ($orders->status !== 'draft') {
             return redirect()
-                ->route('measurements.show', ['measurement' => $measurement->id, 'orders' => $orders->id])
+                ->route('measurments.show', ['measurement' => $measurement->id, 'orders' => $orders->id])
                 ->with('info', 'This order is not editable.');
         }
-    
-        $selectedmeasurement = $measurement;
+
         $readonly = false;
-    
-        return view('measurments.measurmentsupdate', compact('orders', 'selectedmeasurement', 'readonly'));
+
+        return view('measurments.measurmentsupdate', compact(
+            'orders',
+            'selectedmeasurement',
+            'readonly'
+        ));
     }
     
     /**
-     * Persist edits (only when order is draft).
+     * Persist edits.
+     * Users: only when order is draft.
+     * Admins: can always update.
      */
     public function update(Request $request, Orders $orders, Measurements $measurement)
     {
         if ($measurement->order_id !== $orders->id) {
             abort(404);
         }
-    
-        // Only allow updates in draft
-        if ($orders->status !== 'draft') {
+
+        $isAdmin = $this->isAdminUser();
+
+        // Users cannot edit non-draft orders
+        if (! $isAdmin && $orders->status !== 'draft') {
             abort(403, 'This order is not editable.');
         }
-    
+
         $validated = $request->validate([
             'name'   => 'required|string|max:255',
             'dob'    => 'required|date',
@@ -170,9 +232,16 @@ class MeasurementsController extends Controller
         ]);
     
         $measurement->update(array_merge($validated, [
-            'order_id' => $orders->id, // enforce server-side
+            'order_id' => $orders->id,
             'user_id'  => Auth::id(),
         ]));
+
+        // Redirect based on role
+        if ($isAdmin) {
+            return redirect()
+                ->route('admin.orders.show', ['orders' => $orders->id])
+                ->with('success', 'Measurements updated successfully.');
+        }
     
         return redirect()
             ->route('orders.show', ['orders' => $orders->id])

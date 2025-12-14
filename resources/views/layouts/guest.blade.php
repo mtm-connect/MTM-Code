@@ -14,15 +14,11 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased ">
+    <body class="font-sans text-gray-900 antialiased">
 
-        <!-- Content -->
-        <div class="  ">
-          
-<!-- Div for content -->
-            <div class="w-full  pt-4   px-6  overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
+        <div class=" w-full overflow-hidden">
+            @yield('content')   {{-- 🔧 FIXED --}}
         </div>
+
     </body>
 </html>

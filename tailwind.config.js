@@ -15,7 +15,14 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
-                'hanken': ['"Hanken Grotesk"', 'sans-serif'], // Custom font family
+                hanken: ['"Hanken Grotesk"', 'sans-serif'], // Custom font family
+            },
+
+            // 🔥 Add this block
+            colors: {
+                amber: {
+                    500: '#f59e0b', // Tailwind's amber-500 hex
+                },
             },
         },
     },

@@ -6,8 +6,11 @@
     </x-slot>
 
     @if (session('success'))
-        <div class=" mt-12 max-w-7xl mx-auto w-auto rounded-xl p-2 text-center border" style="color: #064e3b; border-color: #064e3b;">
-            <h1 class="text-xl font-bold">Payment Successful</h1>
+        <div class="mt-12 max-w-7xl mx-auto w-auto rounded-xl p-2 text-center border"
+             style="color: #064e3b; border-color: #064e3b;">
+            <h1 class="text-xl font-bold">
+                {{ session('success') }}
+            </h1>
         </div>
     @endif
 
@@ -30,9 +33,9 @@
                 $statusMap = [
                     'draft'            => ['Draft', 'bg-gray-300 text-gray-900'],
                     'paid'             => ['Paid', 'bg-green-300 text-green-900'],
-                    'in_construction'  => ['In Construction', 'bg-purple-300 text-purple-900'],
-                    'quality_control'  => ['Quality Control', 'bg-yellow-300 text-yellow-900'],
+                    'in_construction'  => ['In Construction', 'bg-yellow-300 text-yellow-900'],
                     'dispatched'       => ['Dispatched', 'bg-blue-300 text-blue-900'],
+                    
                 ];
                 [$statusLabel, $statusClasses] = $statusMap[$statusKey]
                     ?? [ucwords(str_replace('_',' ', $statusKey)), 'bg-slate-200 text-slate-900'];
@@ -63,9 +66,9 @@
                 {{-- 4th: Payment (black) OR Status (colored) --}}
                 @if ($showPayment)
                     <a href="{{ route('checkout', ['orders' => $orders->id]) }}"
-                        class="block w-full h-full rounded-xl p-6 text-center transition
-                                bg-black text-white shadow-sm
-                                hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900">
+                       class="block w-full h-full rounded-xl p-6 text-center transition
+                               bg-black text-white shadow-sm
+                               hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900">
                         <p class="text-sm font-semibold opacity-80">Payment</p>
                         <p class="mt-2 text-2xl font-bold">Pay £{{ number_format(($totalPrice ?? 0), 2) }}</p>
                     </a>
@@ -193,122 +196,118 @@
 
                 <!-- ITEMS Section (50%) -->
                 <div name="list_section" class="w-1/2 py-6 ">
-<!-- ===== Empty Card ABOVE Items (Controls) ===== -->
-@php
-    $status = strtolower(trim($orders->status));
-    $showSendButton = $status === 'paid';
-    $showDispatchButton = $status === 'in construction';
-    // Enable Send only if at least one item AND one measurement exist
-    $canSend = ($itemsCount > 0) && ($measCount > 0);
-@endphp
+                    <!-- ===== Empty Card ABOVE Items (Controls) ===== -->
+                    @php
+                        $status = strtolower(trim($orders->status));
+                        $showSendButton = $status === 'paid';
+                        $showDispatchButton = $status === 'in construction';
+                        // Enable Send only if at least one item AND one measurement exist
+                        $canSend = ($itemsCount > 0) && ($measCount > 0);
+                    @endphp
 
-<div class="mt-4 bg-white border border-gray-200 rounded-xl p-6 mb-4 flex items-center justify-between">
-    <p class="text-gray-900 font-semibold mr-4">Controls</p>
+                    <div class="mt-4 bg-white border border-gray-200 rounded-xl p-6 mb-4 flex items-center justify-between">
+                        <p class="text-gray-900 font-semibold mr-4">Controls</p>
 
-    <div class="flex items-center gap-3">
-    {{-- ===== Send Order (only when Paid) ===== --}}
-@if ($showSendButton)
-<div x-data="{ open: false }" class="relative">
-    <form x-ref="sendForm" action="" method="POST">
-        @csrf
-        <button type="button"
-            @click="open = true"
-            class='inline-flex items-center px-4 py-4 bg-black border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 focus:bg-1ray-300 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150'
-            {{ $canSend ? '' : 'disabled' }}>
-            <!-- Paper airplane icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 10l19-7-7 19-4-6-6-4z" />
-            </svg>
-            Send Order
-        </button>
-    </form>
+                        <div class="flex items-center gap-3">
+                            {{-- ===== Send Order (only when Paid) ===== --}}
+                            @if ($showSendButton)
+                                <div x-data="{ open: false }" class="relative">
+                                    <form x-ref="sendForm" action="{{ route('admin.orders.send', $orders) }}" method="POST">
+                                        @csrf
+                                        <button type="button"
+                                            @click="open = true"
+                                            class='inline-flex items-center px-4 py-4 bg-black border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 focus:bg-1ray-300 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150'
+                                            {{ $canSend ? '' : 'disabled' }}>
+                                            <!-- Paper airplane icon -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 10l19-7-7 19-4-6-6-4z" />
+                                            </svg>
+                                            Send Order
+                                        </button>
+                                    </form>
 
-    <!-- Confirmation Modal -->
-    <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center">
-        <!-- Dark overlay -->
-        <div class="absolute inset-0 opacity-50 bg-black " @click="open = false"></div>
+                                    <!-- Confirmation Modal -->
+                                    <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center">
+                                        <!-- Dark overlay -->
+                                        <div class="absolute inset-0 opacity-50 bg-black " @click="open = false"></div>
 
-        <!-- Modal Box -->
-        <div class="relative bg-white rounded-xl shadow-lg max-w-md w-1/4 p-6">
-            <h3 class="text-lg font-semibold text-gray-900">Send this order?</h3>
-            <p class="mt-2 text-sm text-gray-600">
-                This will mark the order (#{{ $orders->order_number }}) as  <span class="font-semibold">In Construction</span>,
-                and send to the factory.
-            </p>
+                                        <!-- Modal Box -->
+                                        <div class="relative bg-white rounded-xl shadow-lg max-w-md w-1/4 p-6">
+                                            <h3 class="text-lg font-semibold text-gray-900">Send this order?</h3>
+                                            <p class="mt-2 text-sm text-gray-600">
+                                                This will mark the order (#{{ $orders->order_number }}) as  <span class="font-semibold">In Construction</span>,
+                                                and send to the factory.
+                                            </p>
 
-            <div class="mt-6 flex justify-end gap-3">
-                <button type="button"
-                    @click="open = false"
-                    class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
-                    Cancel
-                </button>
+                                            <div class="mt-6 flex justify-end gap-3">
+                                                <button type="button"
+                                                    @click="open = false"
+                                                    class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
+                                                    Cancel
+                                                </button>
 
-                <button type="button"
-                    @click="$refs.sendForm.submit()"
-                    class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800">
-                    Yes, Send Order
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-
-
-        {{-- ===== Mark as Dispatched (only when In Construction) ===== --}}
-        @if ($showDispatchButton)
-            <form action="" method="POST">
-                @csrf
-                <button type="submit"
-                class='inline-flex items-center px-4 py-4 bg-black border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 focus:bg-1ray-300 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150'
-                {{ $canSend ? '' : 'disabled' }}>
-                
-                    Mark as Dispatched
-                </button>
-            </form>
-
-            <form action="" method="POST">
-                @csrf
-                <button type="submit"
-                       class='inline-flex items-center px-4 py-4 bg-black border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 focus:bg-1ray-300 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150'
-                        {{ $canSend ? '' : 'disabled' }}>
-                    <!-- Paper airplane icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M3 10l19-7-7 19-4-6-6-4z" />
-                    </svg>
-                    Resend Order
-                </button>
-            </form>
-        @endif
-
-        {{-- ===== Delete Order (always visible) ===== --}}
-        <form action="" method="POST"
-              onsubmit="return confirm('Delete this order permanently? This cannot be undone.');">
-            @csrf
-            @method('DELETE')
-            <button type="submit"
-            class='inline-flex items-center px-4 py-4 bg-red-600 border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 focus:bg-1ray-300 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150'
-            {{ $canSend ? '' : 'disabled' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0V5a2 2 0 012-2h2a2 2 0 012 2v2"/>
-                </svg>
-                Delete Order
-            </button>
-        </form>
-    </div>
-</div>
-<!-- =================================== -->
+                                                <button type="button"
+                                                    @click="$refs.sendForm.submit()"
+                                                    class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800">
+                                                    Yes, Send Order
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
 
 
+                            {{-- ===== Mark as Dispatched (only when In Construction) ===== --}}
+                            @if ($showDispatchButton)
+                                {{-- Mark as Dispatched --}}
+                                <form action="{{ route('admin.orders.dispatch', $orders) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                        class='inline-flex items-center px-4 py-4 bg-black border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 focus:bg-1ray-300 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150'
+                                        {{ $canSend ? '' : 'disabled' }}>
+                                        Mark as Dispatched
+                                    </button>
+                                </form>
 
+                                {{-- Resend Order (if you want to use the same "send" action) --}}
+                                <form action="{{ route('admin.orders.send', $orders) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                           class='inline-flex items-center px-4 py-4 bg-black border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 focus:bg-1ray-300 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150'
+                                            {{ $canSend ? '' : 'disabled' }}>
+                                        <!-- Paper airplane icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M3 10l19-7-7 19-4-6-6-4z" />
+                                        </svg>
+                                        Resend Order
+                                    </button>
+                                </form>
+                            @endif
+
+
+                            {{-- ===== Delete Order (always visible) ===== --}}
+                            <form action="{{ route('admin.orders.destroy', $orders) }}" method="POST"
+                                  onsubmit="return confirm('Delete this order permanently? This cannot be undone.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                class='inline-flex items-center px-4 py-4 bg-red-600 border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 focus:bg-1ray-300 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150'
+                                {{ $canSend ? '' : 'disabled' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0V5a2 2 0 012-2h2a2 2 0 012 2v2"/>
+                                    </svg>
+                                    Delete Order
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- =================================== -->
 
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-                     
-
                     </div>
 
                     <div class="mt-4 bg-emerald-950 overflow-hidden shadow-sm sm:rounded-lg">
@@ -408,10 +407,16 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($orderOverviews as $orderOverview)
+                                                @php
+                                                    $measurementId = optional($orderOverview->measurement)->id;
+                                                @endphp
+
                                                 <tr class="clickable-row cursor-pointer hover:opacity-60 transition-opacity duration-300" 
-                                                    onclick="window.location='{{ $orders->status === 'draft' 
-                                                        ? route('orders.edit', ['orders' => $orders->id, 'orderoverview' => $orderOverview->id, 'measurement' => $measurement->id]) 
-                                                        : route('orders.view', ['orders' => $orders->id, 'orderoverview' => $orderOverview->id, 'measurement' => $measurement->id]) }}'">
+                                                    onclick="window.location='{{ route('admin.orders.items.edit', [
+                                                        'orders'        => $orders->id,
+                                                        'orderoverview' => $orderOverview->id,
+                                                        'measurement'   => $measurementId,
+                                                    ]) }}'">
 
                                                     <!-- Item Type -->
                                                     <td class="px-4 py-3 text-white">{{ $orderOverview->type }}</td>

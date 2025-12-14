@@ -15,11 +15,30 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrdersActionController;
+use App\Http\Controllers\FactoryOrderController;
+use App\Http\Controllers\PricesController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
+
+
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
+
+
+Route::get('/factory/order/{order}/download-zip', [FactoryOrderController::class, 'downloadZip'])
+    ->name('factory.orders.download')
+    ->middleware('signed');   // IMPORTANT for security
+    
+Route::get('/factory/orders/{order}', [FactoryOrderController::class, 'show'])
+    ->name('factory.orders.show')
+    ->middleware('signed');
+
+Route::get('/factory/orders/{order}/items/{overview}', [FactoryOrderController::class, 'showItem'])
+    ->name('factory.orders.items.show')
+    ->middleware('signed');
 
 // -----------------------------
 // Public/guest or verified blocks
@@ -31,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Keep your other dashboards
     Route::get('/admin/dashboard', fn () => view('admin.dashboard'))->name('admin.dashboard');
     Route::get('/super/dashboard', fn () => view('super.dashboard'))->name('super.dashboard');
+
 });
 // -----------------------------
 // Admin (UNTOUCHED)
@@ -39,16 +59,31 @@ Route::middleware(['auth','verified','can:access-admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{orders}', [AdminOrderController::class, 'show'])->name('orders.show');
-        
 
-Route::post('/orders/{order}/send', [OrdersActionController::class, 'send'])->name('orders.send');
-Route::post('/orders/{order}/dispatch', [OrdersActionController::class, 'markAsDispatched'])->name('orders.dispatch');
-Route::delete('/orders/{order}', [OrdersActionController::class, 'destroy'])->name('orders.destroy');
-        
+        Route::get('/admin/prices', [PricesController::class, 'edit'])->name('prices.edit');
+        Route::put('/admin/prices', [PricesController::class, 'update'])->name('prices.update');
+
+        Route::get('/admin/clients', [ClientController::class, 'index']) ->name('clients.index');
+        Route::get('/admin/clients/{client}', [ClientController::class, 'show'])->name('clients.show');
+        Route::patch('/admin/clients/{client}/subscription', [ClientController::class, 'updateSubscription']) ->name('clients.subscription.update');
+
+        // NEW: admin item edit / view
+        Route::get('/orders/{orders}/items/{orderoverview}/measurement/{measurement}/edit',
+            [AdminOrderController::class, 'editItem'])->name('orders.items.edit');
+
+        Route::get('/orders/{orders}/items/{orderoverview}/measurement/{measurement}/view',
+            [AdminOrderController::class, 'viewItem'])->name('orders.items.view');
+
+        Route::post('/orders/{order}/send', [OrdersActionController::class, 'send'])->name('orders.send');
+        Route::post('/orders/{order}/dispatch', [OrdersActionController::class, 'markAsDispatched'])->name('orders.dispatch');
+        Route::delete('/orders/{order}', [OrdersActionController::class, 'destroy'])->name('orders.destroy');
+
+    
     });
+
 
 // -----------------------------
 // ALWAYS ALLOWED ACCOUNT (no subscription check)

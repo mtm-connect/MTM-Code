@@ -6,7 +6,7 @@
     </h2>
   </x-slot>
 
-  <x-guest-layout>
+
 @php
   // Only editable when order is draft
   $readonly = ($orders->status !== 'draft');
@@ -625,5 +625,5 @@
     <br><br>
     </div>
     </form>
-  </x-guest-layout>
+
 </x-app-layout>

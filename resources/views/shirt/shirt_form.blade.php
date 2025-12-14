@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <x-guest-layout>
+
 
  
 
@@ -868,5 +868,5 @@ Fabric / Button Codes
 </div>
     </form>
     </div>
-</x-guest-layout>
+
 </x-app-layout>

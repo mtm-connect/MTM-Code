@@ -69,6 +69,11 @@ public function waistcoat()
 }
 
 
+public function order()
+{
+    return $this->belongsTo(Orders::class, 'order_id');
+}
+
     // 🔹 Automatically determine which item type this overview points to
     public function getItemModelAttribute()
     {
@@ -85,6 +90,8 @@ public function waistcoat()
     {
         return optional($this->item_model)->item_number;
     }
+
+
 }
 
 
