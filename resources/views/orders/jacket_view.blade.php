@@ -359,7 +359,7 @@ $jacket_vents_Image = getImage($jacket_vents_Images, $selectedItem, 'jacket_vent
     <!-- Jacket Fabric Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Jacket Fabric</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-12 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selectedjacket->code_jacket) }}</p>
 
         </div>

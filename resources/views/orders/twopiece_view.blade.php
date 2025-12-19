@@ -418,7 +418,7 @@ $Pants_Satin_Tape_Image = getImage($Pants_Satin_Tape_Images, $selectedItem, 'pan
     <!-- Jacket Fabric Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Jacket Fabric</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_twopiece->code_jacket) }}</p>
 
         </div>
@@ -428,7 +428,7 @@ $Pants_Satin_Tape_Image = getImage($Pants_Satin_Tape_Images, $selectedItem, 'pan
 @if($selected_twopiece->jacket_lining != 'No Lining')
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Jacket Lining</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_twopiece->code_jacket_lining) }}</p>
 
         </div>
@@ -438,7 +438,7 @@ $Pants_Satin_Tape_Image = getImage($Pants_Satin_Tape_Images, $selectedItem, 'pan
     <!-- Jacket Buttons Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Jacket Buttons</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_twopiece->code_jacket_button) }}</p>
 
         </div>
@@ -448,7 +448,7 @@ $Pants_Satin_Tape_Image = getImage($Pants_Satin_Tape_Images, $selectedItem, 'pan
 @if($selected_twopiece->jacket_satin_lapel != 'No Satin Lapel')
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Satin Lapel Colour</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_twopiece->code_satin_lapel) }}</p>
 
         </div>
@@ -460,7 +460,7 @@ $Pants_Satin_Tape_Image = getImage($Pants_Satin_Tape_Images, $selectedItem, 'pan
 @if($selected_twopiece->jacket_buttons_colour_on_last_button_hole == 'Yes')
     <div class="flex flex-col items-center col-span-4 sm:col-span-1">
         <p class="text-m mb-2 text-white">Last Button Hole Colour</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_twopiece->code_colour_on_last_button_hole) }}</p>
 
         </div>
@@ -801,7 +801,7 @@ $Pants_Satin_Tape_Image = getImage($Pants_Satin_Tape_Images, $selectedItem, 'pan
     <!-- Pants Fabric Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Pants Fabric</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_twopiece->code_pants) }}</p>
 
         </div>
@@ -811,7 +811,7 @@ $Pants_Satin_Tape_Image = getImage($Pants_Satin_Tape_Images, $selectedItem, 'pan
     <!-- Pants Buttons Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Pants Buttons</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_twopiece->code_pants_button) }}</p>
 
         </div>
