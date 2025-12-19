@@ -4,7 +4,7 @@
        Create Jacket
         </h2>
     </x-slot>
-    <x-guest-layout>
+   
 
      <!-- SPACING / MARGINS -->
 <div class=" mt-16 mx-40">
@@ -1331,6 +1331,5 @@ Fabric / Button Codes
 </div>
     </form>
     </div>
-    
-</x-guest-layout>
+
 </x-app-layout>
