@@ -82,7 +82,9 @@
         <!-- Country -->
 <div class="">
     <x-input-label for="country" :value="__('Country')" />
-    <select id="country" name="country" class="block mt-3 w-full p-4 border-gray-300 bg-gray-300 bg-opacity-10 focus:font-bold focus:bg-emerald-950 focus:bg-opacity-10 focus:border-emerald-950 rounded-lg focus:ring-emerald-950" required>
+    <select id="country" name="country" class="block mt-3 w-full p-4 border border-gray-300 bg-gray-300 bg-opacity-10
+           focus:font-bold focus:bg-emerald-950 focus:bg-opacity-10
+           focus:border-emerald-950 rounded-lg focus:ring-emerald-950" required>
         <option value="" disabled selected>Select a country</option>
         <option value="AF">Afghanistan</option>
         <option value="AL">Albania</option>
