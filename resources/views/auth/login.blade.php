@@ -25,7 +25,7 @@
     <div class="flex h-screen">
         
         <!-- reg_image div -->
-        <div name="reg_image" class="w-1/2  rounded-none h-full  bg-cover bg-center" style="background-image: url('{{ asset('images/login.JPG') }}');"></div> 
+        <div name="reg_image" class="w-1/2  rounded-none h-full  bg-cover bg-center" style="background-image: url('{{ asset('images/login-v2.JPG') }}');"></div> 
 
         <!-- form_section div -->
         <div name="form_section" class="w-1/2  h-full flex items-center justify-center flex-col bg-emerald-950">
