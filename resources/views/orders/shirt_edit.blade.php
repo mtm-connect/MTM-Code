@@ -31,7 +31,9 @@
             <select
               id="measurement_id"
               name="measurement_id"
-              class="block w-full p-4 border-gray-300 bg-white focus:text-black focus:font-bold focus:bg-white focus:bg-opacity-10 focus:border-gray-300 rounded-xl focus:ring-white"
+              class="block mt-3 w-full p-4 border border-gray-300 bg-gray-300 bg-opacity-10
+           focus:font-bold focus:bg-emerald-950 focus:bg-opacity-10
+           focus:border-emerald-950 rounded-lg focus:ring-emerald-950"
               required
             >
               <!-- Placeholder option (acts like placeholder) -->

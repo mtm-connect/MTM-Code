@@ -23,7 +23,9 @@
 <div class="p-4 rounded-xl mt-8">
     <div class="mt-0 flex items-center space-x-4">
         <x-input-label for="measurement_id" :value="__('For')" class="text-lg font-semibold text-black" />
-        <select id="measurement_id" name="measurement_id" class="block w-full p-4 border-gray-300 bg-white focus:text-black  focus:font-bold focus:bg-white focus:bg-opacity-10 focus:border-gray-300 rounded-xl focus:ring-white" required>
+        <select id="measurement_id" name="measurement_id" class="block mt-3 w-full p-4 border border-gray-300 bg-gray-300 bg-opacity-10
+           focus:font-bold focus:bg-emerald-950 focus:bg-opacity-10
+           focus:border-emerald-950 rounded-lg focus:ring-emerald-950" required>
             <option value="" disabled selected>{{ __('Select Measurement') }}</option>
             @foreach ($measurements as $measurement)
                 <option value="{{ $measurement->id }}" {{ old('measurement_id') == $measurement->id ? 'selected' : '' }}>
