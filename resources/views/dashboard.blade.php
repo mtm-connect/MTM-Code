@@ -159,8 +159,7 @@
 
 <!-- ===== Card 5: Documentation / How to Measure ===== -->
 <div class="relative rounded-xl overflow-hidden border border-gray-200 shadow-sm min-h-[260px]">
-    <!-- Background image (force behind everything) -->
-    <div class="absolute inset-0 -z-10">
+    <div class="absolute inset-0">
         <img
             src="{{ asset('images/reg.jpg') }}"
             alt="Tailored suit close-up"
@@ -170,22 +169,7 @@
         <div class="absolute inset-0 bg-black/50"></div>
     </div>
 
-<!-- ===== Card 5: Documentation / How to Measure ===== -->
-<div class="relative rounded-xl overflow-hidden 0 shadow-sm min-h-[260px]">
-    <!-- Background image (force behind everything) -->
-    <div class="absolute inset-0 -z-10">
-        <img
-            src="{{ asset('images/reg.jpg') }}" {{-- Replace with your actual image --}}
-            alt="Tailored suit close-up"
-            class="w-full h-full object-cover select-none pointer-events-none"
-            loading="lazy"
-        />
-        <!-- Overlay for readability -->
-        <div class="absolute inset-0 bg-black/50"></div>
-    </div>
-
-    <!-- Foreground content -->
-    <div class="relative z-0 !p-12 md:!p-16 text-white" style="padding:3rem;">
+    <div class="relative p-12 md:p-16 text-white">
         <h2 class="text-2xl font-bold">Documentation & Fit Guides</h2>
         <p class="mt-2 text-emerald-100">
             Everything you need to measure accurately and submit perfect orders.
@@ -197,18 +181,19 @@
             <li>Tips to ensure accurate results</li>
         </ul>
 
-        <div class="mt-6 flex flex-wrap gap-3">
+        <div class="mt-6">
             <a href="https://www.deegrahamtailormade.com"
                target="_blank"
                rel="noopener noreferrer"
                class="inline-flex items-center px-6 py-4 rounded-lg border border-white text-white font-semibold
-                      bg-transparent hover:bg-white hover:text-emerald-900 hover:border-white transition-all duration-300 ease-in-out shadow-sm">
+                      bg-transparent hover:bg-white hover:text-emerald-900 transition-all duration-300 shadow-sm">
                 Access
             </a>
         </div>
     </div>
 </div>
 <!-- ===== /Card 5 ===== -->
+
 
 
 
