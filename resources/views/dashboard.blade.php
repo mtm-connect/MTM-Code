@@ -171,11 +171,11 @@
 
     <div class="relative p-12 md:p-16 text-white">
         <h2 class="text-2xl font-bold">Documentation & Fit Guides</h2>
-        <p class="mt-2 text-emerald-100">
+        <p class="mt-2 text-white">
             Everything you need to measure accurately and submit perfect orders.
         </p>
 
-        <ul class="mt-4 space-y-1 text-sm text-emerald-50 list-disc list-inside">
+        <ul class="mt-4 space-y-1 text-sm text-white list-disc list-inside">
             <li>Step-by-step measurement guides</li>
             <li>Garment vs. body fit explanations</li>
             <li>Tips to ensure accurate results</li>
