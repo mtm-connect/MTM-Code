@@ -190,13 +190,13 @@
                 @endif
 
                 {{-- ✳️ Contact section --}}
-                <div class="mt-8 rounded-xl bg-white/5 p-6 text-center">
-                    <p class="text-white/80 text-sm">
+                <div class="mt-8 rounded-xl  p-6 text-center">
+                    <p class="text-black text-sm">
                         If you wish to <span class="font-semibold">upgrade</span>,
                         <span class="font-semibold ">downgrade</span>, or
                         <span class="font-semibold ">cancel</span> a subscription,
                         please contact
-                        <a href="mailto:admin@mtm-connect.com" class="text-emerald-400 hover:text-emerald-300 underline">
+                        <a href="mailto:admin@mtm-connect.com" class="text-emerald-950 hover:text-emerald-950 underline">
                             admin@mtm-connect.com
                         </a>.
                     </p>
