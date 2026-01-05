@@ -159,7 +159,7 @@
                         <ul class="mt-4 space-y-2 text-sm">
                             @foreach($active['features'] as $f)
                                 <li class="flex items-start gap-2">
-                                    <span class="mt-1 h-1.5 w-1.5 rounded-full bg-white/70"></span>{{ $f }}
+                                    <span class="mt-1 h-1.5 w-1.5 rounded-full"></span>{{ $f }}
                                 </li>
                             @endforeach
                         </ul>

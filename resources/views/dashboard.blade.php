@@ -35,7 +35,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 w-full">
 
                 <!-- ===== Graph 1: Orders by Status (Donut) ===== -->
-                <div class="bg-emerald-950 rounded-xl border shadow-sm p-12 flex flex-col items-center text-center">
+                <div class="bg-emerald-950 rounded-xl border shadow-sm p-6 flex flex-col items-center text-center">
                     <h2 class="text-xl font-semibold text-white mb-8 mt-12">
                         Orders by Status
                     </h2>
@@ -54,7 +54,7 @@
                 </div>
 
                 <!-- ===== Graph 2: Last 30 vs Previous 30 (Bar) ===== -->
-                <div class="bg-white rounded-xl border shadow-sm p-12 flex flex-col">
+                <div class="bg-white rounded-xl border shadow-sm p-6 flex flex-col">
                     <h2 class="text-xl font-semibold text-gray-800 mb-8 mt-12 text-center">
                         Last 30 Days
                     </h2>
@@ -84,7 +84,7 @@
                 </div>
 
                 <!-- ===== Card 3: Total Spent (Last 30 Days) ===== -->
-                <div class="bg-emerald-950 rounded-xl border shadow-sm p-12 flex flex-col items-center text-center">
+                <div class="bg-emerald-950 rounded-xl border shadow-sm p-6 flex flex-col items-center text-center">
                     <h2 class="text-xl font-semibold text-white mt-12">
                         Total Spent (Last 30 Days)
                     </h2>
