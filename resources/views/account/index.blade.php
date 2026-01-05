@@ -175,13 +175,13 @@
                             <div class="flex items-start justify-between rounded-xl">
                                 <div>
                                     <div class="text-3xl font-extrabold">{{ $planName }}</div>
-                                    <div class="text-white/80 mt-1">{{ $plan['price'] }}</div>
+                                    <div class="text-black mt-1">{{ $plan['price'] }}</div>
                                 </div>
                             </div>
                             <ul class="mt-4 space-y-2 text-sm">
                                 @foreach($plan['features'] as $f)
                                     <li class="flex items-start gap-2">
-                                        <span class="mt-1 h-1.5 w-1.5 rounded-full bg-white/70"></span>{{ $f }}
+                                        <span class="mt-1 h-1.5 w-1.5 rounded-ful"></span>{{ $f }}
                                     </li>
                                 @endforeach
                             </ul>
