@@ -42,7 +42,7 @@
 
                     @if ($totalOrders > 0)
                         <div class="flex justify-center items-center mb-8 mt-8 relative">
-                            <canvas id="ordersStatusChart" class="w-56 h-56"></canvas>
+                            <canvas id="ordersStatusChart" class="w-70 h-70"></canvas>
                         </div>
                     @else
                         <div class="flex-1 flex items-center justify-center text-center">
