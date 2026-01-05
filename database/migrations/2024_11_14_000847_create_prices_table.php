@@ -21,7 +21,7 @@ return new class extends Migration
             ['product' => '2 Piece',    'price' => 450, 'created_at' => now(), 'updated_at' => now()],
             ['product' => '3 Piece',    'price' => 600, 'created_at' => now(), 'updated_at' => now()],
             ['product' => 'Jacket',     'price' => 300, 'created_at' => now(), 'updated_at' => now()],
-            ['product' => 'Shirt',      'price' => 150, 'created_at' => now(), 'updated_at' => now()],
+            ['product' => 'Shirt',      'price' => 100, 'created_at' => now(), 'updated_at' => now()],
             ['product' => 'Trouser',    'price' => 200, 'created_at' => now(), 'updated_at' => now()],
             ['product' => 'Waistcoat',  'price' => 200, 'created_at' => now(), 'updated_at' => now()],
         ]);

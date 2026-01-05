@@ -73,13 +73,15 @@ class GenerateAndEmailOrderZip implements ShouldQueue, ShouldBeUnique
             ->where('order_id', $order->id)
             ->get();
 
-        $typeMap = [
-            'jacket'      => ['fk' => 'jackets_id',      'class' => \App\Models\Jacket::class,     'view' => 'pdf.items.jacket'],
-            'two_piece'   => ['fk' => 'two_pieces_id',   'class' => \App\Models\TwoPiece::class,   'view' => 'pdf.items.two_piece'],
-            'three_piece' => ['fk' => 'three_pieces_id', 'class' => \App\Models\ThreePiece::class, 'view' => 'pdf.items.three_piece'],
-            'waistcoat'   => ['fk' => 'waistcoat_id',    'class' => \App\Models\Waistcoat::class,  'view' => 'pdf.items.waistcoat'],
-            'shirt'       => ['fk' => 'shirts_id',       'class' => \App\Models\Shirt::class,      'view' => 'pdf.items.shirt'],
-        ];
+            $typeMap = [
+                'jacket'      => ['fk' => 'jackets_id',      'class' => \App\Models\Jacket::class,     'view' => 'pdf.items.jacket'],
+                'two_piece'   => ['fk' => 'two_pieces_id',   'class' => \App\Models\TwoPiece::class,   'view' => 'pdf.items.two_piece'],
+                'three_piece' => ['fk' => 'three_pieces_id', 'class' => \App\Models\ThreePiece::class, 'view' => 'pdf.items.three_piece'],
+                'waistcoat'   => ['fk' => 'waistcoat_id',    'class' => \App\Models\Waistcoat::class,  'view' => 'pdf.items.waistcoat'],
+                'shirt'       => ['fk' => 'shirts_id',       'class' => \App\Models\Shirt::class,      'view' => 'pdf.items.shirt'],
+                'overcoat'    => ['fk' => 'overcoats_id',    'class' => \App\Models\Overcoat::class,   'view' => 'pdf.items.overcoat'],
+            ];
+            
 
         $madeAnyPdf = false;
 
@@ -102,6 +104,7 @@ class GenerateAndEmailOrderZip implements ShouldQueue, ShouldBeUnique
                     'three_piece' => ['selected_threepiece' => $concrete],
                     'waistcoat'   => ['selected_waistcoat'  => $concrete],
                     'shirt'       => ['selected_shirt'      => $concrete],
+                    'overcoat' => ['selectedovercoat' => $concrete],
                     default       => [],
                 };
 
@@ -221,23 +224,26 @@ class GenerateAndEmailOrderZip implements ShouldQueue, ShouldBeUnique
     /** Explicit + early two_piece recognition (supports legacy column). */
     private function detectType(OrderOverview $ov, array $typeMap): array
     {
-        // direct FK matches first (jackets_id, waistcoat_id, etc.)
         foreach ($typeMap as $type => $meta) {
             $fk = $meta['fk'] ?? null;
             if ($fk && isset($ov->{$fk}) && !is_null($ov->{$fk})) {
                 return [$type, $fk];
             }
         }
-
-        // legacy/alt column for two_piece
+    
         if (!is_null($ov->two_piece_id ?? null)) {
             return ['two_piece', 'two_piece_id'];
         }
-
-        // last resort: string type
+    
+        // ✅ add this
+        if (!is_null($ov->overcoat_id ?? null)) {
+            return ['overcoat', 'overcoat_id'];
+        }
+    
         $fallbackType = $ov->type ? strtolower(str_replace(' ', '_', $ov->type)) : 'item';
         return [$fallbackType, null];
     }
+    
 
     /** Fetch the concrete model instance for the overview row. */
     private function fetchConcreteItem(OrderOverview $ov, string $type, ?string $fkCol, array $typeMap)
@@ -258,6 +264,12 @@ class GenerateAndEmailOrderZip implements ShouldQueue, ShouldBeUnique
             return $cls::find($id);
         }
 
+        if ($type === 'overcoat' && isset($typeMap[$type]['class']) && ($id = ($ov->overcoat_id ?? null))) {
+            $cls = $typeMap[$type]['class'];
+            return $cls::find($id);
+        }
+        
+
         return null;
     }
 
@@ -270,9 +282,11 @@ class GenerateAndEmailOrderZip implements ShouldQueue, ShouldBeUnique
             'three_piece' => 'threePiece',
             'waistcoat'   => 'waistcoat',
             'shirt'       => 'shirt',
+            'overcoat'    => 'overcoat',
             default       => 'item_model',
         };
     }
+    
 
     /** First existing Blade view from a list, fallback to a generic view. */
     private function firstExistingView(array $candidates): string

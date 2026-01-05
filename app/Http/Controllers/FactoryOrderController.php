@@ -74,6 +74,8 @@ class FactoryOrderController extends Controller
         $selected_threepiece = null;
         $selectedshirt       = null;
         $selected_waistcoat  = null;
+        $selected_overcoat = null;
+
     
         // Normalise type like in AdminOrderController
         $type = strtolower(trim((string) $overview->type));
@@ -141,6 +143,21 @@ class FactoryOrderController extends Controller
                     'selectedmeasurement',
                     'selected_waistcoat'
                 ));
+
+                case 'overcoat':
+                    case 'over coat':
+                    case 'over_coat':
+                        $selected_overcoat = $overview->overcoat; // <-- relation on OrderOverview
+                        if (!$selected_overcoat) abort(404);
+                    
+                        return view('admin.overcoat_view', compact(
+                            'orders',
+                            'orderOverviews',
+                            'measurement',
+                            'selectedmeasurement',
+                            'selected_overcoat'
+                        ));
+                    
     
             default:
                 abort(404, 'Unsupported item type: ' . $overview->type);

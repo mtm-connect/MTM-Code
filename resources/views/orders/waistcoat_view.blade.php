@@ -441,7 +441,7 @@ $Waistcoat_Type_Image = getImage($Waistcoat_Type_Images, $selectedItem, 'waistco
     <!-- Waistcoat Fabric Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Waistcoat Fabric</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_waistcoat->code_waistcoat) }}</p>
 
         </div>
@@ -451,7 +451,7 @@ $Waistcoat_Type_Image = getImage($Waistcoat_Type_Images, $selectedItem, 'waistco
     <!-- Waistcoat Buttons Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Waistcoat Buttons</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_waistcoat->code_waistcoat_buttons) }}</p>
 
         </div>

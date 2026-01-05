@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 
+
 class OrderOverview extends Model
 {
     use HasFactory, Notifiable;
@@ -25,6 +26,7 @@ class OrderOverview extends Model
         'shirts_id',
         'trouser_id',
         'waistcoat_id',
+        'overcoat_id',
         'type',
         'for',
         'price',
@@ -68,6 +70,12 @@ public function waistcoat()
     return $this->belongsTo(Waistcoat::class, 'waistcoat_id');
 }
 
+public function overcoat()
+{
+    return $this->belongsTo(Overcoat::class, 'overcoat_id');
+}
+
+
 
 public function order()
 {
@@ -82,8 +90,10 @@ public function order()
             ?? $this->threePiece
             ?? $this->shirt
             ?? $this->trouser
-            ?? $this->waistcoat;
+            ?? $this->waistcoat
+            ?? $this->overcoat; // ✅ add
     }
+    
 
     // 🔹 Virtual attribute for easy access to the linked item's number
     public function getItemNumberAttribute()

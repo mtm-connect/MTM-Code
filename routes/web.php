@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\TwoController;
 use App\Http\Controllers\ThreeController;
 use App\Http\Controllers\JacketController;
+use App\Http\Controllers\OvercoatController;
 use App\Http\Controllers\ShirtController;
 use App\Http\Controllers\TrouserController;
 use App\Http\Controllers\WaistcoatController;
@@ -134,6 +135,12 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
     Route::get('/create/jacket/{id}', [JacketController::class, 'create'])->name('jacket.form');
     Route::post('/create/jacket/{id}', [JacketController::class, 'store'])->name('jacket.store');
     Route::put('/update/jacket/{jacket}', [JacketController::class, 'update'])->name('jackets.update');
+
+    // Overcoat
+Route::get('/create/overcoat/{id}', [OvercoatController::class, 'create'])->name('overcoat.form');
+Route::post('/create/overcoat/{id}', [OvercoatController::class, 'store'])->name('overcoat.store');
+Route::put('/update/overcoat/{overcoat}', [OvercoatController::class, 'update'])->name('overcoats.update');
+
 
     // Shirt
     Route::get('/create/shirt/{id}', [ShirtController::class, 'create'])->name('shirt.form');

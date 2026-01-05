@@ -28,7 +28,9 @@ class CheckoutController extends Controller
             'threePiece:id,item_number',
             'trouser:id,item_number',
             'waistcoat:id,item_number',
+            'overcoat:id,item_number',   
         ])->where('order_id', $orderId)->get();
+        
 
         Stripe::setApiKey(config('services.stripe.secret'));
 

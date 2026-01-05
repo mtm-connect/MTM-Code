@@ -8,6 +8,7 @@ use App\Models\ThreePiece;
 use App\Models\Jacket;
 use App\Models\Orders;
 use App\Models\Waistcoat;
+use App\Models\Overcoat;
 use App\Models\Measurements;
 use App\Models\OrderOverview;
 use Illuminate\Http\Request;
@@ -84,9 +85,11 @@ class OrderController extends Controller
             'threePiece:id,item_number',
             'trouser:id,item_number',
             'waistcoat:id,item_number',
+            'overcoat:id,item_number', // ✅ add
         ])
         ->where('order_id', $orderId)
         ->get();
+        
     
         $measurements = Measurements::where('order_id', $orderId)->get();
         $totalPrice   = $orderOverviews->sum('price');
@@ -115,6 +118,8 @@ class OrderController extends Controller
         $selected_threepiece = null;
         $selectedshirt       = null;
         $selected_waistcoat  = null;
+        $selected_overcoat = null;
+
     
         switch ($orderType) {
             case 'jacket':
@@ -171,6 +176,25 @@ class OrderController extends Controller
                 return view('orders.waistcoat_edit', compact(
                     'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selected_waistcoat'
                 ));
+
+                case 'overcoat':
+                    case 'over coat':
+                    case 'over_coat':
+                        if ($orderoverview->overcoat_id) {
+                            $selected_overcoat = Overcoat::where('id', $orderoverview->overcoat_id)
+                                ->where('order_id', $orderId)
+                                ->first();
+                        }
+                    
+                        if (!$selected_overcoat) {
+                            return back()->with('error', 'Overcoat not found for this order.');
+                        }
+                    
+                        return view('orders.overcoat_edit', compact(
+                            'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selected_overcoat'
+                        ));
+                    
+                    
     
             default:
                 return back()->with('error', 'Unsupported or missing order type.');
@@ -196,6 +220,8 @@ class OrderController extends Controller
         $selected_threepiece = null;
         $selectedshirt       = null;
         $selected_waistcoat  = null;
+        $selected_overcoat = null;
+
     
         switch ($orderType) {
             case 'jacket':
@@ -252,6 +278,36 @@ class OrderController extends Controller
                 return view('orders.waistcoat_view', compact(
                     'orders', 'orderOverviews', 'measurement', 'selectedmeasurement', 'selected_waistcoat'
                 ));
+
+                case 'overcoat':
+                    case 'over coat':
+                    case 'over_coat':
+                    
+                        $selected_overcoat = null;
+                    
+                        if ($orderoverview->overcoat_id) {
+                            $selected_overcoat = Overcoat::where('id', $orderoverview->overcoat_id)
+                                ->where('order_id', $orderId)
+                                ->first();
+                        }
+                    
+                        if (!$selected_overcoat) {
+                            return back()->with('error', 'Overcoat not found for this order.');
+                        }
+                    
+                        // ✅ ensure blade has $measurement like jacket view expects
+                        $measurement = $selectedmeasurement;
+                    
+                        return view('orders.overcoat_view', compact(
+                            'orders',
+                            'orderOverviews',
+                            'measurement',
+                            'selectedmeasurement',
+                            'selected_overcoat'
+                        ));
+                    
+                    
+                    
     
             default:
                 return back()->with('error', 'Unsupported or missing order type.');

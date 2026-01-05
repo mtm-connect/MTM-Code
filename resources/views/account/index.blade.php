@@ -7,9 +7,9 @@
         $currentSub = trim((string)($user->subscription ?? 'None'));
 
         $plans = [
-            'Basic' => ['price' => '£500/month','features' => ['Access to digital measurement platform','Order processing','Fabric Books (Basic)'],'bg' => 'bg-black'],
-            'Pro' => ['price' => '£1500/month','features' => ['Access to digital measurement platform','Order processing','Fabric Books (Pro)','Training for Staff','Fitting Support'],'bg' => 'bg-black'],
-            'Enterprise' => ['price' => '£3000/month','features' => ['Access to digital measurement platform','Order processing','Fabric Books (Pro)','Training for Staff','Fitting Support','Dedicated Support','Marketing Assets','Trunk Shows'],'bg' => 'bg-black'],
+            'Essential' => ['price' => '£1000/month','features' => ['Access to digital measurement platform','Order processing','Fabric Books (Basic)'],'bg' => 'bg-black'],
+            'Signature' => ['price' => '£1500/month','features' => ['Access to digital measurement platform','Order processing','Fabric Books (Pro)','Training for Staff','Fitting Support'],'bg' => 'bg-black'],
+            
         ];
 
         $orderedPlans = $plans;

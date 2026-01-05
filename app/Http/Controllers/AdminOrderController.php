@@ -7,6 +7,8 @@ use App\Models\TwoPiece;
 use App\Models\ThreePiece;
 use App\Models\Jacket;
 use App\Models\Orders;
+use App\Models\Overcoat;
+use App\Models\Waistcoat;
 use App\Models\Measurements;
 use App\Models\OrderOverview; // renamed model
 use Illuminate\Http\Request;
@@ -102,7 +104,9 @@ class AdminOrderController extends Controller
             'threePiece:id,item_number',
             'trouser:id,item_number',
             'waistcoat:id,item_number',
+            'overcoat:id,item_number',
         ])->where('order_id', $orderId)->get();
+        
     
         $measurements = Measurements::where('order_id', $orderId)->get();
     
@@ -129,6 +133,8 @@ class AdminOrderController extends Controller
         $selected_twopiece   = $orderoverview->two_pieces_id   ? TwoPiece::find($orderoverview->two_pieces_id)   : null;
         $selected_threepiece = $orderoverview->three_pieces_id ? ThreePiece::find($orderoverview->three_pieces_id) : null;
         $selectedshirt       = $orderoverview->shirts_id       ? Shirt::find($orderoverview->shirts_id)          : null;
+        $selected_overcoat = $orderoverview->overcoats_id ? Overcoat::find($orderoverview->overcoats_id) : null;
+
    
         if (!$orderOverviews) {
             return redirect()->back()->with('error', 'Order overview not found.');
@@ -167,6 +173,8 @@ class AdminOrderController extends Controller
         $selected_twopiece   = $orderoverview->two_pieces_id   ? TwoPiece::find($orderoverview->two_pieces_id)   : null;
         $selected_threepiece = $orderoverview->three_pieces_id ? ThreePiece::find($orderoverview->three_pieces_id) : null;
         $selected_shirt      = $orderoverview->shirts_id       ? Shirt::find($orderoverview->shirts_id)          : null;
+        $selected_overcoat = $orderoverview->overcoats_id ? Overcoat::find($orderoverview->overcoats_id)   : null;
+
 
         if (!$orderOverviews) {
             return redirect()->back()->with('error', 'Order overview not found.');
@@ -194,6 +202,11 @@ class AdminOrderController extends Controller
                 return view('orders.threepiece_view', compact(
                     'orders','orderOverviews','measurements','selectedmeasurement','selected_threepiece'
                 ));
+                case 'Overcoat':
+                    return view('orders.overcoat_view', compact(
+                        'orders','orderOverviews','measurement','selectedmeasurement','selected_overcoat'
+                    ));
+                
         }
 
         abort(404);
@@ -225,6 +238,8 @@ class AdminOrderController extends Controller
     $selected_threepiece = null;
     $selectedshirt       = null;
     $selected_waistcoat  = null;
+    $selected_overcoat = null;
+
 
     switch ($orderType) {
         case 'jacket':
@@ -282,6 +297,17 @@ class AdminOrderController extends Controller
                 'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selected_waistcoat'
             ));
 
+            case 'overcoat':
+                if ($orderoverview->overcoats_id) {
+                    $selected_overcoat = Overcoat::where('id', $orderoverview->overcoats_id)
+                        ->where('order_id', $orderId)->first();
+                }
+                if (!$selected_overcoat) return back()->with('error', 'Overcoat not found for this order.');
+                return view('admin.overcoat_edit', compact(
+                    'orders', 'orderOverviews', 'measurements', 'selectedmeasurement', 'selected_overcoat'
+                ));
+            
+
         default:
             return back()->with('error', 'Unsupported or missing order type.');
     }
@@ -304,6 +330,8 @@ public function viewItem(Orders $orders, OrderOverview $orderoverview, Measureme
     $selected_threepiece = null;
     $selectedshirt       = null;
     $selected_waistcoat  = null;
+    $selected_overcoat = null;
+
 
     switch ($orderType) {
         case 'jacket':
@@ -360,6 +388,17 @@ public function viewItem(Orders $orders, OrderOverview $orderoverview, Measureme
             return view('admin.waistcoat_view', compact(
                 'orders', 'orderOverviews', 'measurement', 'selectedmeasurement', 'selected_waistcoat'
             ));
+
+            case 'overcoat':
+                if ($orderoverview->overcoats_id) {
+                    $selected_overcoat = Overcoat::where('id', $orderoverview->overcoats_id)
+                        ->where('order_id', $orderId)->first();
+                }
+                if (!$selected_overcoat) return back()->with('error', 'Overcoat not found for this order.');
+                return view('admin.overcoat_view', compact(
+                    'orders', 'orderOverviews', 'measurement', 'selectedmeasurement', 'selected_overcoat'
+                ));
+            
 
         default:
             return back()->with('error', 'Unsupported or missing order type.');

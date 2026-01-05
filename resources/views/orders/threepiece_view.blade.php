@@ -437,7 +437,7 @@ $Waistcoat_Tape_Image = getImage($Waistcoat_Tape_Images, $selectedItem, 'waistco
     <!-- Jacket Fabric Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Jacket Fabric</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_threepiece->code_jacket) }}</p>
 
         </div>
@@ -447,7 +447,7 @@ $Waistcoat_Tape_Image = getImage($Waistcoat_Tape_Images, $selectedItem, 'waistco
 @if($selected_threepiece->jacket_lining != 'No Lining')
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Jacket Lining</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_threepiece->code_jacket_lining) }}</p>
 
         </div>
@@ -457,7 +457,7 @@ $Waistcoat_Tape_Image = getImage($Waistcoat_Tape_Images, $selectedItem, 'waistco
     <!-- Jacket Buttons Color -->
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Jacket Buttons</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_threepiece->code_jacket_button) }}</p>
 
         </div>
@@ -467,7 +467,7 @@ $Waistcoat_Tape_Image = getImage($Waistcoat_Tape_Images, $selectedItem, 'waistco
 @if($selected_threepiece->jacket_satin_lapel != 'No Satin Lapel')
     <div class="flex flex-col items-center">
         <p class="text-m mb-2 text-white">Satin Lapel Colour</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_threepiece->code_satin_lapel) }}</p>
 
         </div>
@@ -479,7 +479,7 @@ $Waistcoat_Tape_Image = getImage($Waistcoat_Tape_Images, $selectedItem, 'waistco
 @if($selected_threepiece->jacket_buttons_colour_on_last_button_hole == 'Yes')
     <div class="flex flex-col items-center col-span-4 sm:col-span-1">
         <p class="text-m mb-2 text-white">Last Button Hole Colour</p>
-        <div class="w-48 h-36 flex items-center justify-center border border-white bg-white rounded-lg">
+        <div class="w-48 h-8 flex items-center justify-center border border-white bg-white rounded-lg">
         <p class="font-bold text-xl">{{ strtoupper($selected_threepiece->code_colour_on_last_button_hole) }}</p>
 
         </div>

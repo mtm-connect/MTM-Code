@@ -232,62 +232,79 @@
 @endphp
 
 @if ($showItemButtons)
-  <!-- Row 1: 2 Piece + 3 Piece (50/50) -->
-  <div class="mb-4 grid grid-cols-2 gap-4 w-full">
+
+<!-- Row 1: 2 Piece + 3 Piece + Overcoat -->
+<div class="mb-4 grid grid-cols-3 gap-4 w-full">
+
     <!-- 2 Piece -->
     <button
-      onclick="window.location='{{ route('two.form', ['id' => $orders->id]) }}'"
-      class="relative w-full group inline-flex items-center justify-center py-16 px-4 bg-cover bg-center rounded-md text-xs font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 hover:border-opacity-80 {{ $disabledClasses }}"
-      style="background-image: url('{{ asset('images/2_piece.jpg') }}');"
-      {{ $disabledAttrs }}>
-      <span class="absolute inset-0 z-0 bg-black opacity-30 transition-opacity duration-300 group-hover:opacity-50 group-active:opacity-70 rounded-md pointer-events-none"></span>
-      <span class="relative z-10 text-lg font-semibold text-shadow-lg">2 Piece</span>
+        onclick="window.location='{{ route('two.form', ['id' => $orders->id]) }}'"
+        class="relative w-full group inline-flex items-center justify-center py-16 px-4 bg-cover bg-center rounded-md text-white transition {{ $disabledClasses }}"
+        style="background-image: url('{{ asset('images/2_piece.jpg') }}');"
+        {{ $disabledAttrs }}>
+        <span class="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-md"></span>
+        <span class="relative z-10 text-lg font-semibold">2 Piece</span>
     </button>
 
     <!-- 3 Piece -->
     <button
-      onclick="window.location='{{ route('three.form', ['id' => $orders->id]) }}'"
-      class="relative w-full group inline-flex items-center justify-center py-16 px-4 bg-cover bg-center rounded-md text-xs font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 hover:border-opacity-80 {{ $disabledClasses }}"
-      style="background-image: url('{{ asset('images/3_piece.jpg') }}');"
-      {{ $disabledAttrs }}>
-      <span class="absolute inset-0 z-0 bg-black opacity-30 transition-opacity duration-300 group-hover:opacity-50 group-active:opacity-70 rounded-md pointer-events-none"></span>
-      <span class="relative z-10 text-lg font-semibold text-shadow-lg">3 Piece</span>
+        onclick="window.location='{{ route('three.form', ['id' => $orders->id]) }}'"
+        class="relative w-full group inline-flex items-center justify-center py-16 px-4 bg-cover bg-center rounded-md text-white transition {{ $disabledClasses }}"
+        style="background-image: url('{{ asset('images/3_piece.jpg') }}');"
+        {{ $disabledAttrs }}>
+        <span class="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-md"></span>
+        <span class="relative z-10 text-lg font-semibold">3 Piece</span>
     </button>
-  </div>
 
-  <!-- Row 2: Jacket + Waistcoat + Shirt -->
-  <div class="mb-4 grid grid-cols-3 gap-4 w-full">
+    <!-- Overcoat (same size as Jacket) -->
+    <button
+        onclick="window.location='{{ route('overcoat.form', ['id' => $orders->id]) }}'"
+        class="relative w-full group inline-flex items-center justify-center py-24 px-4 bg-cover bg-center rounded-md text-white transition {{ $disabledClasses }}"
+        style="background-image: url('{{ asset('images/overcoat.jpg') }}');"
+        {{ $disabledAttrs }}>
+        <span class="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-md"></span>
+        <span class="relative z-10 text-lg font-semibold">Overcoat</span>
+    </button>
+
+</div>
+
+<!-- Row 2: Jacket + Waistcoat + Shirt (UNCHANGED) -->
+<div class="mb-4 grid grid-cols-3 gap-4 w-full">
+
     <!-- Jacket -->
     <button
-      onclick="window.location='{{ route('jacket.form', ['id' => $orders->id]) }}'"
-      class="relative w-full group inline-flex items-center justify-center py-24 px-4 bg-cover bg-center rounded-md text-xs font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 hover:border-opacity-80 {{ $disabledClasses }}"
-      style="background-image: url('{{ asset('images/jacket.jpg') }}');"
-      {{ $disabledAttrs }}>
-      <span class="absolute inset-0 z-0 bg-black opacity-30 transition-opacity duration-300 group-hover:opacity-50 group-active:opacity-70 rounded-md pointer-events-none"></span>
-      <span class="relative z-10 text-lg font-semibold text-shadow-lg">Jacket</span>
+        onclick="window.location='{{ route('jacket.form', ['id' => $orders->id]) }}'"
+        class="relative w-full group inline-flex items-center justify-center py-24 px-4 bg-cover bg-center rounded-md text-white transition {{ $disabledClasses }}"
+        style="background-image: url('{{ asset('images/jacket.jpg') }}');"
+        {{ $disabledAttrs }}>
+        <span class="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-md"></span>
+        <span class="relative z-10 text-lg font-semibold">Jacket</span>
     </button>
 
     <!-- Waistcoat -->
     <button
-      onclick="window.location='{{ route('waistcoat.form', ['id' => $orders->id]) }}'"
-      class="relative w-full group inline-flex items-center justify-center py-24 px-4 bg-cover bg-center rounded-md text-xs font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 hover:border-opacity-80 {{ $disabledClasses }}"
-      style="background-image: url('{{ asset('images/waistcoat.jpg') }}');"
-      {{ $disabledAttrs }}>
-      <span class="absolute inset-0 z-0 bg-black opacity-30 transition-opacity duration-300 group-hover:opacity-50 group-active:opacity-70 rounded-md pointer-events-none"></span>
-      <span class="relative z-10 text-lg font-semibold text-shadow-lg">Waistcoat</span>
+        onclick="window.location='{{ route('waistcoat.form', ['id' => $orders->id]) }}'"
+        class="relative w-full group inline-flex items-center justify-center py-24 px-4 bg-cover bg-center rounded-md text-white transition {{ $disabledClasses }}"
+        style="background-image: url('{{ asset('images/waistcoat.jpg') }}');"
+        {{ $disabledAttrs }}>
+        <span class="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-md"></span>
+        <span class="relative z-10 text-lg font-semibold">Waistcoat</span>
     </button>
 
     <!-- Shirt -->
     <button
-      onclick="window.location='{{ route('shirt.form', ['id' => $orders->id]) }}'"
-      class="relative w-full group inline-flex items-center justify-center py-24 px-4 bg-cover bg-center rounded-md text-xs font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 hover:border-opacity-80 {{ $disabledClasses }}"
-      style="background-image: url('{{ asset('images/shirt.jpg') }}');"
-      {{ $disabledAttrs }}>
-      <span class="absolute inset-0 z-0 bg-black opacity-30 transition-opacity duration-300 group-hover:opacity-50 group-active:opacity-70 rounded-md pointer-events-none"></span>
-      <span class="relative z-10 text-lg font-semibold text-shadow-lg">Shirt</span>
+        onclick="window.location='{{ route('shirt.form', ['id' => $orders->id]) }}'"
+        class="relative w-full group inline-flex items-center justify-center py-24 px-4 bg-cover bg-center rounded-md text-white transition {{ $disabledClasses }}"
+        style="background-image: url('{{ asset('images/shirt.jpg') }}');"
+        {{ $disabledAttrs }}>
+        <span class="absolute inset-0 bg-black opacity-30 group-hover:opacity-50 rounded-md"></span>
+        <span class="relative z-10 text-lg font-semibold">Shirt</span>
     </button>
-  </div>
+
+</div>
 @endif
+
+
 
 
 
